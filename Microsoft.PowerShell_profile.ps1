@@ -42,21 +42,45 @@ function ass # AndroidScreenShot
 
 function Add-Path
 {
-  $found   = $FALSE
-  $current = Get-Location
-  foreach($path in $env:Path.split(';')) {
-    if($path -eq $current) {
-      $found = $TRUE
-    }
-  }
-
-  if(-not $found) {
-    $env:Path += ";$(Get-Location)"
+  param (
+    [Object]$dir = $(Get-Location)
+  )
+  if(-not (In-Path $dir)) {
+    $env:Path += ";$($dir))"
     [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
     Write-Host "$(Get-Location) :: Added to Path" -ForegroundColor "green"
   } else {
     Write-Host "$(Get-Location) :: Already in Path" -ForegroundColor "red"
   }
+}
+
+function Remove-Path
+{
+  param (
+    [Object]$dir = $(Get-Location)
+  )
+  if((In-Path)) {
+    $env:Path = $env:Path.replace($dir, '')
+    $env:Path = $env:Path.replace(';;', ';')
+    [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
+    Write-Host "$(Get-Location) :: Deleted for the path" -ForegroundColor "green"
+  } else {
+    Write-Host "$(Get-Location) :: Is not in the path" -ForegroundColor "red"
+  }
+}
+
+function In-Path
+{
+  param(
+    [Object]$dir = $(Get-Location)
+  )
+  $found   = $FALSE
+  foreach($path in $env:Path.split(';')) {
+    if($path -eq $dir) {
+      $found = $TRUE
+    }
+  }
+  return $found
 }
 
 function p
