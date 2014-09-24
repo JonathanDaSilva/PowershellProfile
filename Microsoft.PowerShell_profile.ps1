@@ -1,5 +1,4 @@
 Set-ExecutionPolicy Unrestricted
-
 # Modules
 if(-not (Test-Path $((Split-Path $Profile)+"\Modules\PsGet\PsGet.psm1") )) {
   (new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
@@ -7,6 +6,13 @@ if(-not (Test-Path $((Split-Path $Profile)+"\Modules\PsGet\PsGet.psm1") )) {
 Install-Module -ModuleURL https://github.com/JonathanDaSilva/PSTimestamp/zipball/master
 Install-Module posh-git
 
+
+Function Global:prompt
+{
+  Write-Host $(Get-Location) -NoNewLine
+  Write-VcsStatus
+  return "`n>>"
+}
 
 # Alias
 Set-Alias 7z 7za
@@ -20,16 +26,8 @@ if(Test-Path Alias:\wget) {
   Remove-Item Alias:\wget # Delete the powershell wget alias
 }
 
-function prompt
-{
-  Write-Host $pwd.ProviderPath -noNewLine
-  Write-VcsStatus
-  Write-Host
-}
-
 function reload
 {
-  . $Profile
   $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
 }
 
@@ -107,7 +105,3 @@ function qandroid
   adb install -r "./build.apk"
   adb shell am start -n $pack/$act
 }
-
-# Load posh-git example profile
-. 'D:\Documents\WindowsPowerShell\Modules\posh-git\profile.example.ps1'
-
