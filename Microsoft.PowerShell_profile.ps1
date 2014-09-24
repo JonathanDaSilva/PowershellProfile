@@ -42,9 +42,10 @@ function ass # AndroidScreenShot
 
 function Add-Path
 {
-  $found = $FALSE
+  $found   = $FALSE
+  $current = Get-Location
   foreach($path in $env:Path.split(';')) {
-    if($path -eq $(Get-Location)) {
+    if($path -eq $current) {
       $found = $TRUE
     }
   }
