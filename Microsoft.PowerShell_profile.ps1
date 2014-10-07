@@ -7,6 +7,7 @@ Install-Module -ModuleURL https://github.com/JonathanDaSilva/PSTimestamp/zipball
 Install-Module posh-git
 
 
+# Change the default Prompt
 Function Global:prompt
 {
   Write-Host $(Get-Location) -NoNewLine
@@ -44,7 +45,7 @@ function Add-Path
     [Object]$dir = $(Get-Location)
   )
   if(-not (In-Path $dir)) {
-    $env:Path += ";$($dir))"
+    $env:Path += ";$($dir)"
     [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
     Write-Host "$(Get-Location) :: Added to Path" -ForegroundColor "green"
   } else {
@@ -57,7 +58,7 @@ function Remove-Path
   param (
     [Object]$dir = $(Get-Location)
   )
-  if((In-Path)) {
+  if(In-Path) {
     $env:Path = $env:Path.replace($dir, '')
     $env:Path = $env:Path.replace(';;', ';')
     [Environment]::SetEnvironmentVariable("Path", $env:Path, [System.EnvironmentVariableTarget]::Machine)
@@ -80,10 +81,9 @@ function In-Path
   }
   return $found
 }
-
 function p
 {
-  cd "D:\Programmation\"
+  Set-Location "D:\Programmation\"
 }
 
 function qandroid
