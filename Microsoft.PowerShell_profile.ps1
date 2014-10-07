@@ -1,11 +1,28 @@
 Set-ExecutionPolicy Unrestricted
 # Modules
-if(-not (Test-Path $((Split-Path $Profile)+"\Modules\PsGet\PsGet.psm1") )) {
+$profileDir = Split-Path -parent $Profile
+# Test that PsGet is install
+if(-not (Test-Path $($profileDir+"\Modules\PsGet\PsGet.psm1") )) {
   (new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
 }
 Install-Module -ModuleURL https://github.com/JonathanDaSilva/PSTimestamp/zipball/master
 Install-Module posh-git
 
+# Update Modules
+$lastUpdate = $profileDir+'\.last-update'
+if(-not $(Test-Path $lastUpdate)) {
+  # If never update
+  Set-Content $lastUpdate 0
+}
+$time = [Int] $(Get-Content $lastUpdate)
+if( $((Get-TimeStamp) - $time) -gt $(3600*24*7)) {
+  # Check if it's hasn't been update for one week
+  Write-Host "Update Modules..." -ForegroundColor "Green"
+  Update-Module -All -Module PsGet
+  Set-Content $lastUpdate $(Get-TimeStamp)
+} else {
+  Write-Host "No Update" -ForegroundColor "Green"
+}
 
 # Change the default Prompt
 Function Global:prompt
