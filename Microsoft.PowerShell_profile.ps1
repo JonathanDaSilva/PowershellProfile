@@ -37,12 +37,8 @@ Set-Alias 7z 7za
 $VIMPATH = "C:\Program Files (x86)\Vim\vim74\gvim.exe"
 Set-Alias vi $VIMPATH
 Set-Alias vim $VIMPATH
-if(Test-Path Alias:\curl) {
-  Remove-Item Alias:\curl # Delete the powershell curl alias
-}
-if(Test-Path Alias:\wget) {
-  Remove-Item Alias:\wget # Delete the powershell wget alias
-}
+Remove-Item Alias:\curl -ErrorAction "SilentlyContinue" # Delete the powershell curl alias
+Remove-Item Alias:\wget -ErrorAction "SilentlyContinue" # Delete the powershell wget alias
 
 function reload
 {
