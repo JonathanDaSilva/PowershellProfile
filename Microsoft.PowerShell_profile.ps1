@@ -80,7 +80,7 @@ function android-cmake
   Set-Alias qmake  "C:\Qt\5.4\android_armv7\bin\qmake.exe"
   Set-Alias deploy "C:\Qt\5.4\android_armv7\bin\androiddeployqt.exe"
   $buildDir  = "build-android"
-  $toolchain = "C:\tools\toolchain\pro.toolchain.cmake"
+  $toolchain = "C:\tools\toolchain\androidqt.toolchain.cmake"
   $ant       = "C:\tools\apache-ant-1.9.4\bin\ant.bat"
   New-Item -ItemType Directory -ErrorAction SilentlyContinue $buildDir
   Set-Location $buildDir
