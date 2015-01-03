@@ -33,6 +33,7 @@ function ass # AndroidScreenShot
   adb shell /system/bin/screencap -p /sdcard/screenshot.png
   adb pull  /sdcard/screenshot.png D:/Bureau/screenshot.png
   adb shell rm /sdcard/screenshot.png
+  & "C:\Program Files\ShareX\ShareX.exe" "D:\Bureau\screenshot.png"
 }
 
 function p
