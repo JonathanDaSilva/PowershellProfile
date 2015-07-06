@@ -25,21 +25,22 @@ Set-Alias ssh-keyscan "C:\Program Files (x86)\Git\bin\ssh-keyscan.exe"
 # Curl
 Remove-Item Alias:\curl -ErrorAction SilentlyContinue
 Install-Package "curl" -ProviderName "Chocolatey"
-Set-Alias curl "C:\Chocolatey\lib\curl.7.28.1\tools\curl.exe"
+Set-Alias curl $(Resolve-Path "C:\Chocolatey\lib\curl.*\tools\curl.exe").Path
 
 # GnuWin
 Remove-Item Alias:\wget -ErrorAction SilentlyContinue
-Install-Package "GnuWin" -ProviderName "Chocolatey"
-Set-Alias wget    "C:\GnuWin\bin\wget.exe"
-Set-Alias openssl "C:\GnuWin\bin\openssl.exe"
+Install-Package "GnuWin" -ProviderName "Chocolatey" -RequiredVersion "0.6.3"
+Set-Alias wget    "C:\bin\GnuWin\bin\wget.exe"
+Set-Alias openssl "C:\bin\GnuWin\bin\openssl.exe"
+
+# Ctags
+Add-Path "C:\tools\Ctags"
 
 # Python
-Install-Package "python2" -ProviderName chocolatey
-Install-Package "python" -ProviderName chocolatey
-Add-Path "C:\tools\Python2" -ErrorAction SilentlyContinue
-Add-Path "C:\tools\Python3" -ErrorAction SilentlyContinue
-Add-Path "C:\tools\Python2\Scripts" -ErrorAction SilentlyContinue
-Add-Path "C:\tools\Python3\Scripts" -ErrorAction SilentlyContinue
+Add-Path $(Resolve-Path "C:\Python2*").Path -ErrorAction SilentlyContinue
+Add-Path $(Resolve-Path "C:\Python3*").Path -ErrorAction SilentlyContinue
+Add-Path $(Resolve-Path "C:\Python2*\Scripts").Path -ErrorAction SilentlyContinue
+Add-Path $(Resolve-Path "C:\Python3*\Scripts").Path -ErrorAction SilentlyContinue
 Set-Alias python  py
 Set-Alias pythonw pyw
 
@@ -47,8 +48,7 @@ Set-Alias pythonw pyw
 Add-Path "C:\tools\ruby\bin" -ErrorAction SilentlyContinue
 
 # PHP
-Add-Path "C:\tools\php" -ErrorAction SilentlyContinue
-Install-Package "composer" -ProviderName "Chocolatey"
+Add-Path "C:\tools\php\"
 Add-Path "~\AppData\Roaming\Composer\vendor\bin" -ErrorAction SilentlyContinue
 
 # IOJS
@@ -61,11 +61,17 @@ $GVIMPATH = "C:\Program Files (x86)\Vim\vim74\gvim.exe"
 Set-Alias vi  $GVIMPATH
 Set-Alias vim $GVIMPATH
 
-# Vagrant
+# VirtualBox
 Install-Package "virtualbox" -ProviderName "Chocolatey"
-Install-Package "vagrant"    -ProviderName "Chocolatey"
 Add-Path "C:\Program Files\Oracle\VirtualBox" -ErrorAction SilentlyContinue
+
+# Vagrant
+Install-Package "vagrant"    -ProviderName "Chocolatey"
 Set-Alias vagrant "C:\HashiCorp\Vagrant\bin\vagrant.exe"
+
+# Docker
+function docker {
+  & boot2docker ssh "docker $args"
 
 # Alias
 Install-Package cmake
@@ -88,6 +94,7 @@ function Global:prompt
   Write-Host $(Get-Location)
   return ">>> "
 }
+
 
 function ass # AndroidScreenShot
 {
@@ -117,20 +124,18 @@ function Remove-Service
     $service.delete()
     Write-Host "$name Service Deleted" -ForegroundColor "Green"
   } else {
-    Write-Host "$name Service doesn't eAxist" -ForegroundColor "Red"
+    Write-Host "$name Service doesn't exist" -ForegroundColor "Red"
   }
 }
 
 function qt-cmake
-{A
+{
   $buildDir  = "build-windows"
-  $qtcmake   = $(Resolve-Path "C:\Qt\Qt*\*\mingw*_32\lib\cmake\").Path
-
   Remove-Item $buildDir -Force -Recurse -ErrorAction SilentlyContinue
   New-Item -ItemType Directory $buildDir > ~/null
   # build process
   Set-Location $buildDir
-  cmake.exe -G"MinGW Makefiles" -DCMAKE_PREFIX_PATH="$qtcmake" ..
+  cmake.exe -G"MinGW Makefiles" ..
   cmake --build .
   Set-Location ..
   # Copy the executable in the current folder
@@ -146,12 +151,11 @@ function android-cmake
   Set-Alias deploy $(Resolve-Path "C:\Qt\*\android_armv7\bin\androiddeployqt.exe").Path
   $buildDir  = "build-android"
   $toolchain = "C:\tools\cmake-toolchain\androidqt.toolchain.cmake"
-  $ant       = env:\ANT
+  $ant       = Get-Content Env:\ANT
 
-  Stop-Process $(Get-Process adb -ErrorAction SilentlyContinue) -ErrorAction SilentlyContinue
-  Remove-Item $buildDir -Force -Recurse -ErrorAction SilentlyContinue
-  New-Item -ItemType Directory $buildDir > ~/null
+  New-Item -ItemType Directory $buildDir -ErrorAction SilentlyContinue > ~/null
   Set-Location $buildDir
+  Remove-Item * -Force -Recurse
   cmake -G"MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE="$toolchain" ..
   Remove-Item -Force -Recurse *
   qmake ../project.pro
