@@ -72,6 +72,7 @@ Set-Alias vagrant "C:\HashiCorp\Vagrant\bin\vagrant.exe"
 # Docker
 function docker {
   & boot2docker ssh "docker $args"
+}
 
 # Alias
 Install-Package cmake
