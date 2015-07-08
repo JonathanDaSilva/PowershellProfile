@@ -33,9 +33,6 @@ Install-Package "GnuWin" -ProviderName "Chocolatey" -RequiredVersion "0.6.3"
 Set-Alias wget    "C:\bin\GnuWin\bin\wget.exe"
 Set-Alias openssl "C:\bin\GnuWin\bin\openssl.exe"
 
-# Ctags
-Add-Path "C:\tools\Ctags"
-
 # Python
 Add-Path $(Resolve-Path "C:\Python2*").Path -ErrorAction SilentlyContinue
 Add-Path $(Resolve-Path "C:\Python3*").Path -ErrorAction SilentlyContinue
