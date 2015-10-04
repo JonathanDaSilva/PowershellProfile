@@ -1,90 +1,55 @@
-# Put chocolatey in trusted packagesource
-Set-PackageSource -Name "Chocolatey" -Trusted > ~/null
-
-# PsGet Modules
-PsGet\Install-Module -ModuleUrl "https://github.com/JonathanDaSilva/PSEnvVariable/archive/master.zip" -ErrorAction SilentlyContinue
-PsGet\Install-Module PSReadLine -ErrorAction SilentlyContinue
+# Module
+Import-Module EnvVariable
 
 # Store the emplacement of the profile for other programs
 Set-Env PSProfile $profile
 
 # Zzip
-Set-Alias 7z "C:\tools\7zip\7za.exe"
+Set-Alias 7z "C:\Program Files\7zip\7za.exe"
 
 # Git
-Install-Package "git"     -ProviderName "Chocolatey"
-Install-Package "p4merge" -ProviderName "Chocolatey"
-Add-Path "C:\Program Files (x86)\Git\cmd\" -ErrorAction SilentlyContinue
-
-Set-Alias ssh         "C:\Program Files (x86)\Git\bin\ssh.exe"
-Set-Alias ssh-add     "C:\Program Files (x86)\Git\bin\ssh-add.exe"
-Set-Alias ssh-agent   "C:\Program Files (x86)\Git\bin\ssh-agent.exe"
-Set-Alias ssh-keygen  "C:\Program Files (x86)\Git\bin\ssh-keygen.exe"
-Set-Alias ssh-keyscan "C:\Program Files (x86)\Git\bin\ssh-keyscan.exe"
-
-# Curl
-Remove-Item Alias:\curl -ErrorAction SilentlyContinue
-Install-Package "curl" -ProviderName "Chocolatey"
-Set-Alias curl $(Resolve-Path "C:\Chocolatey\lib\curl.*\tools\curl.exe").Path
+Set-Alias git "C:\Program Files\Git\cmd\git.exe"
 
 # GnuWin
 Remove-Item Alias:\wget -ErrorAction SilentlyContinue
-Install-Package "GnuWin" -ProviderName "Chocolatey" -RequiredVersion "0.6.3"
-Set-Alias wget    "C:\bin\GnuWin\bin\wget.exe"
-Set-Alias openssl "C:\bin\GnuWin\bin\openssl.exe"
+Set-Alias wget    "C:\GnuWin\bin\wget.exe"
+Set-Alias openssl "C:\GnuWin\bin\openssl.exe"
+Set-Alias grep    "C:\GnuWin\bin\grep.exe"
 
 # Python
-Add-Path $(Resolve-Path "C:\Python2*").Path -ErrorAction SilentlyContinue
-Add-Path $(Resolve-Path "C:\Python3*").Path -ErrorAction SilentlyContinue
-Add-Path $(Resolve-Path "C:\Python2*\Scripts").Path -ErrorAction SilentlyContinue
-Add-Path $(Resolve-Path "C:\Python3*\Scripts").Path -ErrorAction SilentlyContinue
-Set-Alias python  py
-Set-Alias pythonw pyw
+Add-Path "C:\Python2*\Scripts"
+Add-Path "C:\Python3*\Scripts"
+Set-Alias python  "C:\Windows\py.exe"
+Set-Alias pythonw "C:\Windows\pyw.exe"
 
 # Ruby
-Add-Path "C:\tools\ruby\bin" -ErrorAction SilentlyContinue
+Add-Path "C:\Ruby*\bin"
 
 # PHP
-Add-Path "C:\tools\php\"
-Add-Path "~\AppData\Roaming\Composer\vendor\bin" -ErrorAction SilentlyContinue
+Set-Alias php "C:\PHP\php.exe"
+Add-Path "~\AppData\Roaming\Composer\vendor\bin"
 
 # IOJS
-Install-Package "io.js" -ProviderName "Chocolatey"
-Add-Path "C:\Program Files\iojs\" -ErrorAction SilentlyContinue
-Add-Path "~/AppData/Roaming/npm" -ErrorAction SilentlyContinue
+Add-Path "C:\Program Files\nodejs\"
+Add-Path "~\AppData\Roaming\npm"
 
 # Vim
-$GVIMPATH = "C:\Program Files (x86)\Vim\vim74\gvim.exe"
+$GVIMPATH = $(Resolve-Path "C:\Program Files (x86)\Vim\vim7*\gvim.exe").Path
 Set-Alias vi  $GVIMPATH
 Set-Alias vim $GVIMPATH
 
-# VirtualBox
-Install-Package "virtualbox" -ProviderName "Chocolatey"
-Add-Path "C:\Program Files\Oracle\VirtualBox" -ErrorAction SilentlyContinue
-
 # Vagrant
-Install-Package "vagrant"    -ProviderName "Chocolatey"
 Set-Alias vagrant "C:\HashiCorp\Vagrant\bin\vagrant.exe"
 
-# Docker
-function docker {
-  & boot2docker ssh "docker $args"
-}
-
-# Alias
-Install-Package cmake
-Set-Alias cmake   "C:\Program Files (x86)\CMake\bin\cmake.exe"
-
-# Encoding
-Add-Path "C:\tools\Encoding" -ErrorAction SilentlyContinue
-Set-Alias dgi "C:\tools\DGIndexNV\DGIndexNV.exe"
+# Cmake
+Set-Alias cmake "C:\Program Files (x86)\CMake\bin\cmake.exe"
 
 # Android
-Install-Package "jdk8" -ProviderName Chocolatey
 Set-Env JAVA_HOME $(Resolve-Path "C:\Program Files\Java\jdk*").Path
-Set-Env ANDROID_NDK_ROOT "C:\tools\android-ndk"
-Set-Env ANDROID_SDK "C:\tools\android-sdk"
-Set-Env ANT "C:\tools\apache-ant\bin\ant.bat"
+Set-Env ANDROID_NDK_ROOT "C:\Android\NDK"
+Set-Env ANDROID_SDK      "C:\Android\SDK"
+Set-Env GRADLE           "C:\Android\gradle\bin\gradle.bat"
+Set-Alias adb            "C:\Android\SDK\platform-tools\adb.exe"
 
 # Change the default Prompt
 function Global:prompt
@@ -96,15 +61,14 @@ function Global:prompt
 
 function ass # AndroidScreenShot
 {
-  adb shell /system/bin/screencap -p /sdcard/screenshot.png
-  adb pull  /sdcard/screenshot.png D:/Bureau/screenshot.png
-  adb shell rm /sdcard/screenshot.png
-  & "C:\Program Files\ShareX\ShareX.exe" "D:\Bureau\screenshot.png"
-}
+  $sh      = New-Object -COM WScript.Shell
+  $lnk     = (Resolve-Path "~/Links/Desktop.lnk").Path
+  $desktop = $sh.CreateShortcut($lnk).TargetPath
 
-function p
-{
-  Set-Location "D:\Programmation\"
+  adb shell /system/bin/screencap -p /sdcard/screenshot.png
+  adb pull  /sdcard/screenshot.png "$desktop/screenshot.png"
+  adb shell rm /sdcard/screenshot.png
+  & "C:\Program Files\ShareX\ShareX.exe" "$desktop\screenshot.png"
 }
 
 function Remove-Service
