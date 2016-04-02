@@ -1,20 +1,30 @@
-# Module
-Import-Module EnvVariable
-
 # Store the emplacement of the profile for other programs
 Set-Env PSProfile $profile
 
 # Zzip
 Set-Alias 7z "C:\Program Files\7zip\7za.exe"
 
-# Git
-Set-Alias git "C:\Program Files\Git\cmd\git.exe"
+# CygWin
+function lynx        { Invoke-Cygwin "lynx" $args}
+function git         { Invoke-Cygwin "git"  $args}
+function wget        { Invoke-Cygwin "wget" $args}
+function openssl     { Invoke-Cygwin "openssl" $args}
+function grep        { Invoke-Cygwin "grep" $args}
+function sage        { Invoke-Cygwin "sage" $args}
 
-# GnuWin
-Remove-Item Alias:\wget -ErrorAction SilentlyContinue
-Set-Alias wget    "C:\GnuWin\bin\wget.exe"
-Set-Alias openssl "C:\GnuWin\bin\openssl.exe"
-Set-Alias grep    "C:\GnuWin\bin\grep.exe"
+# SSH
+function ssh         { Invoke-Cygwin "ssh" $args}
+function ssh-add     { Invoke-Cygwin "ssh-add" $args}
+function ssh-agent   { Invoke-Cygwin "ssh-agent" $args}
+function ssh-keygen  { Invoke-Cygwin "ssh-keygen" $args}
+function ssh-keyscan { Invoke-Cygwin "ssh-keyscan" $args}
+function ssh-pageant { Invoke-Cygwin "ssh-pageant" $args}
+function ssh-copy-id { Invoke-Cygwin "ssh-copy-id" $args}
+
+# Ansible
+function ansible          { Invoke-Cygwin "ansible" $args}
+function ansible-playbook { Invoke-Cygwin "ansible-playbook" $args}
+function ansible-galaxy   { Invoke-Cygwin "ansible-galaxy" $args}
 
 # Python
 Add-Path "C:\Python2*\Scripts"
@@ -29,14 +39,18 @@ Add-Path "C:\Ruby*\bin"
 Set-Alias php "C:\PHP\php.exe"
 Add-Path "~\AppData\Roaming\Composer\vendor\bin"
 
-# IOJS
+# NodeJS
 Add-Path "C:\Program Files\nodejs\"
 Add-Path "~\AppData\Roaming\npm"
 
 # Vim
-$GVIMPATH = $(Resolve-Path "C:\Program Files (x86)\Vim\vim7*\gvim.exe").Path
+$GVIMPATH = $(Resolve-Path "C:\Program Files\Vim\vim7*\gvim.exe").Path
 Set-Alias vi  $GVIMPATH
 Set-Alias vim $GVIMPATH
+
+# # Docker
+# Add-Path "C:\Program Files\Docker Toolbox\"
+# docker-machine env --shell powershell dev | Invoke-Expression
 
 # Vagrant
 Set-Alias vagrant "C:\HashiCorp\Vagrant\bin\vagrant.exe"
@@ -50,6 +64,8 @@ Set-Env ANDROID_NDK_ROOT "C:\Android\NDK"
 Set-Env ANDROID_SDK      "C:\Android\SDK"
 Set-Env GRADLE           "C:\Android\gradle\bin\gradle.bat"
 Set-Alias adb            "C:\Android\SDK\platform-tools\adb.exe"
+Set-Alias fastboot       "C:\Android\SDK\platform-tools\fastboot.exe"
+Add-Path "$($env:JAVA_HOME)/bin"
 
 # Change the default Prompt
 function Global:prompt

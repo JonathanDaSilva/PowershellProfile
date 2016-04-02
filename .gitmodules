@@ -1,0 +1,6 @@
+[submodule "Modules/PSEnvVariable"]
+	path = Modules/PSEnvVariable
+	url = https://github.com/JonathanDaSilva/PSEnvVariable.git
+[submodule "Modules/PSCygwin"]
+	path = Modules/PSCygwin
+	url = https://github.com/JonathanDaSilva/PSCygwin.git
