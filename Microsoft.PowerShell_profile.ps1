@@ -52,9 +52,6 @@ Set-Alias vim $GVIMPATH
 # Add-Path "C:\Program Files\Docker Toolbox\"
 # docker-machine env --shell powershell dev | Invoke-Expression
 
-# Vagrant
-Set-Alias vagrant "C:\HashiCorp\Vagrant\bin\vagrant.exe"
-
 # Cmake
 Set-Alias cmake "C:\Program Files (x86)\CMake\bin\cmake.exe"
 
