@@ -1,16 +1,19 @@
 # Store the emplacement of the profile for other programs
 Set-Env PSProfile $profile
 
-# Zzip
-Set-Alias 7z "C:\Program Files\7zip\7za.exe"
-
 # CygWin
 function lynx        { Invoke-Cygwin "lynx" $args}
-function git         { Invoke-Cygwin "git"  $args}
+function tar         { Invoke-Cygwin "tar" $args}
+function 7z          { Invoke-Cygwin "7z" $args}
+function svn         { Invoke-Cygwin "svn" $args}
+function chmod       { Invoke-Cygwin "chmod" $args}
+function nano        { Invoke-Cygwin "nano" $args}
+function curl        { Invoke-Cygwin "curl" $args}
 function wget        { Invoke-Cygwin "wget" $args}
 function openssl     { Invoke-Cygwin "openssl" $args}
 function grep        { Invoke-Cygwin "grep" $args}
-function sage        { Invoke-Cygwin "sage" $args}
+function apt-get     { Invoke-Cygwin "apt-cyg" $args}
+function cygwin      { C:\cygwin\bin\bash.exe --login }
 
 # SSH
 function ssh         { Invoke-Cygwin "ssh" $args}
@@ -18,13 +21,13 @@ function ssh-add     { Invoke-Cygwin "ssh-add" $args}
 function ssh-agent   { Invoke-Cygwin "ssh-agent" $args}
 function ssh-keygen  { Invoke-Cygwin "ssh-keygen" $args}
 function ssh-keyscan { Invoke-Cygwin "ssh-keyscan" $args}
-function ssh-pageant { Invoke-Cygwin "ssh-pageant" $args}
 function ssh-copy-id { Invoke-Cygwin "ssh-copy-id" $args}
 
 # Ansible
 function ansible          { Invoke-Cygwin "ansible" $args}
 function ansible-playbook { Invoke-Cygwin "ansible-playbook" $args}
 function ansible-galaxy   { Invoke-Cygwin "ansible-galaxy" $args}
+function ansible-vault    { Invoke-Cygwin "ansible-vault" $args}
 
 # Python
 Add-Path "C:\Python2*\Scripts"
@@ -41,7 +44,6 @@ Add-Path "~\AppData\Roaming\Composer\vendor\bin"
 
 # NodeJS
 Add-Path "C:\Program Files\nodejs\"
-Add-Path "~\AppData\Roaming\npm"
 
 # Vim
 $GVIMPATH = $(Resolve-Path "C:\Program Files\Vim\vim7*\gvim.exe").Path
