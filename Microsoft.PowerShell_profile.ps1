@@ -1,42 +1,35 @@
 # Store the emplacement of the profile for other programs
 Set-Env PSProfile $profile
 
-# CygWin
-function lynx        { Invoke-Cygwin "lynx" $args}
-function tar         { Invoke-Cygwin "tar" $args}
-function 7z          { Invoke-Cygwin "7z" $args}
-function svn         { Invoke-Cygwin "svn" $args}
-function chmod       { Invoke-Cygwin "chmod" $args}
-function nano        { Invoke-Cygwin "nano" $args}
-function curl        { Invoke-Cygwin "curl" $args}
-function wget        { Invoke-Cygwin "wget" $args}
-function openssl     { Invoke-Cygwin "openssl" $args}
-function grep        { Invoke-Cygwin "grep" $args}
-function apt-get     { Invoke-Cygwin "apt-cyg" $args}
-function cygwin      { C:\cygwin\bin\bash.exe --login }
-
-# SSH
-function ssh         { Invoke-Cygwin "ssh" $args}
-function ssh-add     { Invoke-Cygwin "ssh-add" $args}
-function ssh-agent   { Invoke-Cygwin "ssh-agent" $args}
-function ssh-keygen  { Invoke-Cygwin "ssh-keygen" $args}
-function ssh-keyscan { Invoke-Cygwin "ssh-keyscan" $args}
-function ssh-copy-id { Invoke-Cygwin "ssh-copy-id" $args}
+# MSYS2
+Add-Path "C:\msys64\mingw64\bin\" -Global
+Add-Path "C:\msys64\usr\bin\" -Global
+function msys   { C:\msys64\usr\bin\bash.exe --login }
+Remove-Item alias:\wget -ErrorAction "SilentlyContinue"
+Remove-Item alias:\curl -ErrorAction "SilentlyContinue"
+Remove-Item alias:\ls   -ErrorAction "SilentlyContinue"
 
 # Ansible
-function ansible          { Invoke-Cygwin "ansible" $args}
-function ansible-playbook { Invoke-Cygwin "ansible-playbook" $args}
-function ansible-galaxy   { Invoke-Cygwin "ansible-galaxy" $args}
-function ansible-vault    { Invoke-Cygwin "ansible-vault" $args}
+function ansible          { Invoke-MSYS "ansible" $args}
+function ansible-playbook { Invoke-MSYS "ansible-playbook" $args}
+function ansible-galaxy   { Invoke-MSYS "ansible-galaxy" $args}
+function ansible-vault    { Invoke-MSYS "ansible-vault" $args}
+function ansible-lint     { Invoke-MSYS "ansible-lint" $args}
+
+# Putty
+function Add-Putty {
+  param(
+    [Parameter(Mandatory=$True,Position=1)]
+    [String]$hostName
+  )
+  & 'C:\Program Files (x86)\Atlassian\SourceTree\tools\putty\plink.exe' $hostName
+}
 
 # Python
 Add-Path "C:\Python2*\Scripts"
 Add-Path "C:\Python3*\Scripts"
 Set-Alias python  "C:\Windows\py.exe"
 Set-Alias pythonw "C:\Windows\pyw.exe"
-
-# Ruby
-Add-Path "C:\Ruby*\bin"
 
 # PHP
 Set-Alias php "C:\PHP\php.exe"
@@ -46,6 +39,7 @@ Add-Path "~\AppData\Roaming\Composer\vendor\bin"
 Add-Path "C:\Program Files\nodejs\"
 
 # Vim
+# $GVIMPATH = "C:\Neovim\bin\nvim-qt.exe"
 $GVIMPATH = $(Resolve-Path "C:\Program Files\Vim\vim7*\gvim.exe").Path
 Set-Alias vi  $GVIMPATH
 Set-Alias vim $GVIMPATH
@@ -55,7 +49,7 @@ Set-Alias vim $GVIMPATH
 # docker-machine env --shell powershell dev | Invoke-Expression
 
 # Cmake
-Set-Alias cmake "C:\Program Files (x86)\CMake\bin\cmake.exe"
+# Set-Alias cmake "C:\Program Files (x86)\CMake\bin\cmake.exe"
 
 # Android
 Set-Env JAVA_HOME $(Resolve-Path "C:\Program Files\Java\jdk*").Path
