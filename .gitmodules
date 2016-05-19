@@ -1,0 +1,6 @@
+[submodule "Modules/PSEnvVariable"]
+	path = Modules/PSEnvVariable
+	url = git@github.com:JonathanDaSilva/PSEnvVariable.git
+[submodule "Modules/PSMSYS"]
+	path = Modules/PSMSYS
+	url = git@github.com:JonathanDaSilva/PSMSYS.git
