@@ -67,6 +67,11 @@ function Global:prompt
   return ">>> "
 }
 
+function gitsu {
+  git submodule sync
+  git submodule update --init
+  git submodule foreach "(git checkout master; git pull;)"
+}
 
 function ass # AndroidScreenShot
 {
