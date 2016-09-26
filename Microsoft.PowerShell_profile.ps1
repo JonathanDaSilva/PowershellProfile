@@ -1,5 +1,6 @@
 # Store the emplacement of the profile for other programs
 Set-Env PSProfile $profile
+Import-Module Jump.Location
 
 # MSYS2
 Add-Path "C:\msys64\mingw64\bin\" -Global
@@ -25,6 +26,28 @@ function Add-Putty {
   & 'C:\Program Files (x86)\Atlassian\SourceTree\tools\putty\plink.exe' $hostName
 }
 
+function clean {
+  if(Test-Path ./node_modules) {
+    Remove-Item ./node_modules -Force -Recurse
+  }
+  if(Test-Path ./package.json) {
+    npm install
+  }
+  if(Test-Path ./jspm_packages) {
+    Remove-Item ./jspm_packages -Force -Recurse
+    jspm install -y
+  }
+  if(Test-Path ./jspm.browser.js) {
+    jspm install -y
+  }
+  if(Test-Path ./typings) {
+    Remove-Item ./typings -Force -Recurse
+  }
+  if(Test-Path ./typings.json) {
+    typings install
+  }
+}
+
 # Python
 Add-Path "C:\Python2*\Scripts"
 Add-Path "C:\Python3*\Scripts"
@@ -40,7 +63,7 @@ Add-Path "C:\Program Files\nodejs\"
 
 # Vim
 # $GVIMPATH = "C:\Neovim\bin\nvim-qt.exe"
-$GVIMPATH = $(Resolve-Path "C:\Program Files\Vim\vim7*\gvim.exe").Path
+$GVIMPATH = $(Resolve-Path "C:\Program Files\Vim\vim8*\gvim.exe").Path
 Set-Alias vi  $GVIMPATH
 Set-Alias vim $GVIMPATH
 
@@ -67,11 +90,6 @@ function Global:prompt
   return ">>> "
 }
 
-function gitsu {
-  git submodule sync
-  git submodule update --init
-  git submodule foreach "(git checkout master; git pull;)"
-}
 
 function ass # AndroidScreenShot
 {
