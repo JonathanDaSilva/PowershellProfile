@@ -79,8 +79,6 @@ Set-Env JAVA_HOME $(Resolve-Path "C:\Program Files\Java\jdk*").Path
 Set-Env ANDROID_NDK_ROOT "C:\Android\NDK"
 Set-Env ANDROID_SDK      "C:\Android\SDK"
 Set-Env GRADLE           "C:\Android\gradle\bin\gradle.bat"
-Set-Alias adb            "C:\Android\SDK\platform-tools\adb.exe"
-Set-Alias fastboot       "C:\Android\SDK\platform-tools\fastboot.exe"
 Add-Path "$($env:JAVA_HOME)/bin"
 
 # Change the default Prompt
@@ -170,4 +168,10 @@ function android-cmake
 
   Set-Location ..
   Move-Item project.pro $buildDir/
+}
+
+# Chocolatey profile
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
 }
