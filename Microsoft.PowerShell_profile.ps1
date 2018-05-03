@@ -1,10 +1,13 @@
 # Store the emplacement of the profile for other programs
 Set-Env PSProfile $profile
-Import-Module Jump.Location
+
+# ZLocation
+Import-Module ZLocation
+Write-Host -Foreground Green "`n[ZLocation] knows about $((Get-ZLocation).Keys.Count) locations.`n"
 
 # MSYS2
-Add-Path "C:\msys64\mingw64\bin\" -Global
-Add-Path "C:\msys64\usr\bin\" -Global
+Add-Path "C:\msys64\mingw64\bin\"
+Add-Path "C:\msys64\usr\bin\"
 function msys   { C:\msys64\usr\bin\bash.exe --login }
 Remove-Item alias:\wget -ErrorAction "SilentlyContinue"
 Remove-Item alias:\curl -ErrorAction "SilentlyContinue"
@@ -17,69 +20,29 @@ function ansible-galaxy   { Invoke-MSYS "ansible-galaxy" $args}
 function ansible-vault    { Invoke-MSYS "ansible-vault" $args}
 function ansible-lint     { Invoke-MSYS "ansible-lint" $args}
 
-# Putty
-function Add-Putty {
-  param(
-    [Parameter(Mandatory=$True,Position=1)]
-    [String]$hostName
-  )
-  & 'C:\Program Files (x86)\Atlassian\SourceTree\tools\putty\plink.exe' $hostName
-}
-
-function clean {
-  if(Test-Path ./node_modules) {
-    Remove-Item ./node_modules -Force -Recurse
-  }
-  if(Test-Path ./package.json) {
-    npm install
-  }
-  if(Test-Path ./jspm_packages) {
-    Remove-Item ./jspm_packages -Force -Recurse
-    jspm install -y
-  }
-  if(Test-Path ./jspm.browser.js) {
-    jspm install -y
-  }
-  if(Test-Path ./typings) {
-    Remove-Item ./typings -Force -Recurse
-  }
-  if(Test-Path ./typings.json) {
-    typings install
-  }
-}
-
 # Python
 Add-Path "C:\Python2*\Scripts"
 Add-Path "C:\Python3*\Scripts"
 Set-Alias python  "C:\Windows\py.exe"
 Set-Alias pythonw "C:\Windows\pyw.exe"
 
-# PHP
-Set-Alias php "C:\PHP\php.exe"
-Add-Path "~\AppData\Roaming\Composer\vendor\bin"
-
 # NodeJS
 Add-Path "C:\Program Files\nodejs\"
 
 # Vim
-# $GVIMPATH = "C:\Neovim\bin\nvim-qt.exe"
 $GVIMPATH = $(Resolve-Path "C:\Program Files\Vim\vim8*\gvim.exe").Path
 Set-Alias vi  $GVIMPATH
 Set-Alias vim $GVIMPATH
-
-# # Docker
-# Add-Path "C:\Program Files\Docker Toolbox\"
-# docker-machine env --shell powershell dev | Invoke-Expression
 
 # Cmake
 # Set-Alias cmake "C:\Program Files (x86)\CMake\bin\cmake.exe"
 
 # Android
-Set-Env JAVA_HOME $(Resolve-Path "C:\Program Files\Java\jdk*").Path
-Set-Env ANDROID_NDK_ROOT "C:\Android\NDK"
-Set-Env ANDROID_SDK      "C:\Android\SDK"
-Set-Env GRADLE           "C:\Android\gradle\bin\gradle.bat"
-Add-Path "$($env:JAVA_HOME)/bin"
+Set-Env ANDROID_HOME      "C:\Android\"
+# Set-Env JAVA_HOME $(Resolve-Path "C:\Program Files\Java\jdk*").Path
+# Set-Env ANDROID_NDK_ROOT "C:\Android\NDK"
+# Set-Env GRADLE           "C:\Android\gradle\bin\gradle.bat"
+# Add-Path "$($env:JAVA_HOME)/bin"
 
 # Change the default Prompt
 function Global:prompt
@@ -99,6 +62,11 @@ function ass # AndroidScreenShot
   adb pull  /sdcard/screenshot.png "$desktop/screenshot.png"
   adb shell rm /sdcard/screenshot.png
   & "C:\Program Files\ShareX\ShareX.exe" "$desktop\screenshot.png"
+}
+
+function run
+{
+  npm run $args
 }
 
 function Remove-Service
